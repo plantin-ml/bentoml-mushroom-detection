@@ -1,0 +1,22 @@
+service: "service.py:svc"
+description: "file: ./README.md"
+include:
+  - "*.py"
+  - "service.py"
+  - "weights/*.pt"
+exclude:
+  - "tests/"
+  - "locustfile.py"
+python:
+  requirements_txt: "./requirements.txt"
+  extra_index_url:
+    - "https://download.pytorch.org/whl/cu116"
+docker:
+  distro: debian
+  python_version: "3.8"
+  cuda_version: "11.6"
+  system_packages:
+    - libgl1-mesa-glx
+    - ffmpeg
+    - libsm6
+    - libxext6

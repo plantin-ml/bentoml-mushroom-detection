@@ -1,4 +1,6 @@
+import glob
 import io
+import os
 
 import bentoml
 import requests
@@ -8,16 +10,24 @@ from PIL import Image as PilImage
 from pydantic import BaseModel, HttpUrl
 
 
+def get_latest_model(search_dir='.'):
+    last_list = glob.glob(f'{search_dir}/*best.pt', recursive=True)
+
+    return max(last_list, key=os.path.getctime) if last_list else ''
+
+
 class Yolov5Runnable(bentoml.Runnable):
     SUPPORTED_RESOURCES = ("nvidia.com/gpu", "cpu")
     SUPPORTS_CPU_MULTI_THREADING = True
 
     def __init__(self):
+        model_path = get_latest_model('./weights')
+
         self.model = torch.hub.load(
             repo_or_dir="./yolov5",
             source='local',
             model='custom',
-            path='./weights/best.pt',
+            path=model_path,
         )
 
         if torch.cuda.is_available():
