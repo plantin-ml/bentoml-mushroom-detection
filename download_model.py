@@ -8,7 +8,6 @@ from clearml import Task, Model
     "--task_id",
     help="ID of task",
 )
-
 def export(task_id):
     prev_task = Task.get_task(task_id=task_id)
     last_snapshot: Model = prev_task.models['output'][-1]
